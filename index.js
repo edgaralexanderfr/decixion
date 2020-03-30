@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-console.log('Decixion Engine 0.1.0');
+console.log('Decixion Engine 0.1.1');
