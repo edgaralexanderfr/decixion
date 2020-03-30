@@ -1,4 +1,2 @@
-const decixion = require('./src/decixion');
-const game = require('./src/game');
-
-decixion.init(game);
+#!/usr/bin/env node
+console.log('Decixion Engine 0.0.1');
