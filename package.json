@@ -21,5 +21,8 @@
     "engine"
   ],
   "author": "Edgar Alexander Franco <edgaralexanderfr@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "bin": {
+    "decixion": "./cli.js"
+  }
 }
