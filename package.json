@@ -1,6 +1,6 @@
 {
   "name": "decixion",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Engine for simple text/decision-based games.",
   "main": "index.js",
   "scripts": {
