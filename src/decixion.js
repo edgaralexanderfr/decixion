@@ -10,8 +10,19 @@ var decixion = {
     _rangeMin: 0,
     _rangeMax: 100,
 
+    setRangeMin: function (rangeMin) {
+        decixion._rangeMin = rangeMin;
+    },
+
+    setRangeMax: function (rangeMax) {
+        decixion._rangeMax = rangeMax;
+    },
+
     init: function (game) {
         decixion._game = game;
+
+        decixion._initPlayers(game);
+        decixion._initState(game);
     },
 
     get: function (name, player) {
@@ -44,14 +55,6 @@ var decixion = {
         }
     },
 
-    setRangeMin: function (rangeMin) {
-        decixion._rangeMin = rangeMin;
-    },
-
-    setRangeMax: function (rangeMax) {
-        decixion._rangeMax = rangeMax;
-    },
-
     increase: function (name, value, player, rangeMax) {
         rangeMax = rangeMax || decixion._rangeMax;
 
@@ -78,7 +81,38 @@ var decixion = {
         decixion.set(name, nextValue, player);
 
         return nextValue;
-    }
+    },
+
+    _initPlayers: function (game) {
+        if (typeof game['players'] == 'object') {
+            var playerKey, player, name;
+
+            for (playerKey in game.players) {
+                player = game.players[playerKey];
+
+                for (name in player) {
+                    decixion.set(
+                        name,
+                        player[name],
+                        playerKey
+                    );
+                }
+            }
+        }
+    },
+
+    _initState: function (game) {
+        if (typeof game['state'] == 'object') {
+            var name;
+
+            for (name in game.state) {
+                decixion.set(
+                    name,
+                    game.state[name]
+                );
+            }
+        }
+    },
 };
 
 decixion.IS_MODULE = typeof module != 'undefined';
