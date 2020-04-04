@@ -53,6 +53,8 @@ var decixion = {
         } else {
             decixion._state[name] = value;
         }
+
+        return value;
     },
 
     increase: function (name, value, player, rangeMax) {
@@ -113,6 +115,43 @@ var decixion = {
             }
         }
     },
+
+    _getObjectChain: function (object, attributeChain) {
+        var chain = attributeChain.split('.');
+        var total = chain.length;
+        var i;
+
+        for (i = 0; i < total; i++) {
+            if (typeof object[chain[i]] == 'undefined') {
+                return undefined;
+            }
+
+            object = object[chain[i]];
+        }
+
+        return object;
+    },
+
+    _setObjectChain: function (object, attributeChain, value) {
+        var chain = attributeChain.split('.');
+        var total = chain.length;
+        var last = total - 1;
+        var i;
+
+        for (i = 0; i < total; i++) {
+            if (i == last) {
+                object[chain[i]] = value;
+            } else {
+                if (typeof object[chain[i]] != 'object') {
+                    object[chain[i]] = {};
+                }
+
+                object = object[chain[i]];
+            }
+        }
+
+        return value;
+    }
 };
 
 decixion.IS_MODULE = typeof module != 'undefined';
