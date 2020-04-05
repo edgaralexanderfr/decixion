@@ -1,7 +1,7 @@
 /**
  * Decixion Engine
  *
- * Version: 0.2.1
+ * Version: 0.3.0
  * MIT License
  * Copyright (c) 2020 Edgar Alexander Franco
  */

@@ -24,7 +24,7 @@ for (i = 0; i < argc; i++) {
 
 if (createOptionIndex < 0) {
     console.log(
-        'Decixion Engine 0.2.1' + os.EOL +
+        'Decixion Engine 0.3.0' + os.EOL +
         os.EOL +
         'Usage:' + os.EOL +
         '  decixion create my-project-name' + os.EOL +

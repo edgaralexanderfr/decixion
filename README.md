@@ -1,6 +1,6 @@
 # Decixion Engine
 
-[![View last release](https://img.shields.io/badge/version-0.2.1-informational.svg)](https://github.com/edgaralexanderfr/decixion/releases/latest)
+[![View last release](https://img.shields.io/badge/version-0.3.0-informational.svg)](https://github.com/edgaralexanderfr/decixion/releases/latest)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Donate](https://img.shields.io/badge/Donate-ff69b4.svg)](http://www.edgaralexanderfr.com.ve/donate)
 

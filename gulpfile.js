@@ -6,7 +6,7 @@ const HEADER =
     '/**\n' +
     ' * Decixion Engine\n' +
     ' *\n' +
-    ' * Version: 0.2.1\n' +
+    ' * Version: 0.3.0\n' +
     ' * MIT License\n' +
     ' * Copyright (c) 2020 Edgar Alexander Franco\n' +
     ' */\n';
