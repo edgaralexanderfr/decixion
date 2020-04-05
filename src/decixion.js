@@ -27,20 +27,20 @@ var decixion = {
 
     get: function (name, player) {
         if (player) {
-            if (decixion._players[player]
-                && typeof decixion._players[player][name] != 'undefined'
-            ) {
-                return decixion._players[player][name];
+            if (decixion._players[player]) {
+                return decixion._getObjectChain(
+                    decixion._players[player],
+                    name
+                );
             }
 
             return undefined;
         }
 
-        if (typeof decixion._state[name] != 'undefined') {
-            return decixion._state[name];
-        }
-
-        return undefined;
+        return decixion._getObjectChain(
+            decixion._state,
+            name
+        );
     },
 
     set: function (name, value, player) {
@@ -49,9 +49,17 @@ var decixion = {
                 decixion._players[player] = {};
             }
 
-            decixion._players[player][name] = value;
+            decixion._setObjectChain(
+                decixion._players[player],
+                name,
+                value
+            );
         } else {
-            decixion._state[name] = value;
+            decixion._setObjectChain(
+                decixion._state,
+                name,
+                value
+            );
         }
 
         return value;
@@ -87,32 +95,19 @@ var decixion = {
 
     _initPlayers: function (game) {
         if (typeof game['players'] == 'object') {
-            var playerKey, player, name;
-
-            for (playerKey in game.players) {
-                player = game.players[playerKey];
-
-                for (name in player) {
-                    decixion.set(
-                        name,
-                        player[name],
-                        playerKey
-                    );
-                }
-            }
+            decixion._setValuesRecursive(
+                decixion._players, 
+                game.players
+            );
         }
     },
 
     _initState: function (game) {
         if (typeof game['state'] == 'object') {
-            var name;
-
-            for (name in game.state) {
-                decixion.set(
-                    name,
-                    game.state[name]
-                );
-            }
+            decixion._setValuesRecursive(
+                decixion._state, 
+                game.state
+            );
         }
     },
 
@@ -151,6 +146,42 @@ var decixion = {
         }
 
         return value;
+    },
+
+    _setValuesRecursive: function (object1, object2) {
+        var isArray = Array.isArray(object2);
+        var key, value, isArrayValue, isObjectValue, object;
+
+        for (key in object2) {
+            value = object2[key];
+            isArrayValue = Array.isArray(value);
+            isObjectValue = typeof value == 'object';
+
+            if (isArrayValue || isObjectValue) {
+                if (isArrayValue) {
+                    object = [];
+                } else {
+                    object = {};
+                }
+
+                decixion._setValuesRecursive(
+                    object,
+                    value
+                );
+
+                if (isArray) {
+                    object1.push(object);
+                } else {
+                    object1[key] = object;
+                }
+            } else {
+                if (isArray) {
+                    object1.push(value);
+                } else {
+                    object1[key] = value;
+                }
+            }
+        }
     }
 };
 
