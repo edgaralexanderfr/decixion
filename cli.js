@@ -39,7 +39,7 @@ if (createOptionIndex < 0) {
     if (!projectFolder) {
         console.error('ERROR: project name not specified.');
     } else {
-        var copyPath = path.join(__dirname, 'src');
+        var copyPath = path.join(__dirname, 'dist');
         var destPath = path.join(process.cwd(), projectFolder);
 
         if (fs.existsSync(destPath)) {

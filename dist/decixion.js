@@ -1,0 +1,8 @@
+/**
+ * Decixion Engine
+ *
+ * Version: 0.2.1
+ * MIT License
+ * Copyright (c) 2020 Edgar Alexander Franco
+ */
+var decixion={IS_MODULE:!1,_game:null,_players:{},_state:{},_rangeMin:0,_rangeMax:100,setRangeMin:function(e){decixion._rangeMin=e},setRangeMax:function(e){decixion._rangeMax=e},init:function(e){decixion._game=e,decixion._initPlayers(e),decixion._initState(e)},get:function(e,i){return i?decixion._players[i]?decixion._getObjectChain(decixion._players[i],e):void 0:decixion._getObjectChain(decixion._state,e)},set:function(e,i,n){return n?(decixion._players[n]||(decixion._players[n]={}),decixion._setObjectChain(decixion._players[n],e,i)):decixion._setObjectChain(decixion._state,e,i),i},increase:function(e,i,n,t){t=t||decixion._rangeMax;var o=decixion.get(e,n)+i;return t<o&&(o=t),decixion.set(e,o,n),o},decrease:function(e,i,n,t){t=t||decixion._rangeMin;var o=decixion.get(e,n)-i;return o<t&&(o=t),decixion.set(e,o,n),o},_initPlayers:function(e){"object"==typeof e.players&&decixion._setValuesRecursive(decixion._players,e.players)},_initState:function(e){"object"==typeof e.state&&decixion._setValuesRecursive(decixion._state,e.state)},_getObjectChain:function(e,i){var n,t=i.split("."),o=t.length;for(n=0;n<o;n++){if(void 0===e[t[n]])return;e=e[t[n]]}return e},_setObjectChain:function(e,i,n){var t,o=i.split("."),c=o.length,a=c-1;for(t=0;t<c;t++)t==a?e[o[t]]=n:("object"!=typeof e[o[t]]&&(e[o[t]]={}),e=e[o[t]]);return n},_setValuesRecursive:function(e,i){var n,t,o,c,a=Array.isArray(i);for(n in i)t=i[n],(o=Array.isArray(t))||"object"==typeof t?(c=o?[]:{},decixion._setValuesRecursive(c,t),a?e.push(c):e[n]=c):a?e.push(t):e[n]=t}};decixion.IS_MODULE="undefined"!=typeof module,decixion.IS_MODULE&&(module.exports=decixion);
