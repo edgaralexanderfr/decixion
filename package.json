@@ -2,7 +2,7 @@
   "name": "decixion",
   "version": "0.3.0",
   "description": "Engine for simple text/decision-based games.",
-  "main": "src/decixion.js",
+  "main": "dist/decixion.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
