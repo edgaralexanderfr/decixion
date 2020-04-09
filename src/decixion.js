@@ -9,6 +9,10 @@ var decixion = {
     _state: {},
     _rangeMin: 0,
     _rangeMax: 100,
+    _currentSection: null,
+    _textEl: null,
+    _selectEl: null,
+    _buttonEl: null,
 
     setRangeMin: function (rangeMin) {
         decixion._rangeMin = rangeMin;
@@ -18,11 +22,92 @@ var decixion = {
         decixion._rangeMax = rangeMax;
     },
 
+    text: function () {
+        return decixion._currentSection.text;
+    },
+
+    options: function () {
+        var options = [];
+        var currentOptions = decixion._currentSection.options;
+        var total = currentOptions.length;
+        var i;
+
+        for (i = 0; i < total; i++) {
+            options.push(currentOptions[i].text);
+        }
+
+        return options;
+    },
+
+    bindtext: function (textEl) {
+        decixion._textEl = textEl;
+        decixion._textEl.innerText = decixion.text();
+    },
+
+    unbindtext: function () {
+        decixion._textEl = null;
+    },
+
+    bindselect: function (selectEl) {
+        decixion.unbindselect();
+
+        var currentSection = decixion._currentSection;
+        decixion._selectEl = selectEl;
+
+        if (currentSection && currentSection['options']) {
+            decixion._updateSelectElOptions(currentSection.options);
+        }
+
+        decixion._selectEl.addEventListener(
+            'change', 
+            decixion._onSelectElChange, 
+            false
+        );
+    },
+
+    unbindselect: function () {
+        if (decixion._selectEl) {
+            decixion._selectEl.removeEventListener(
+                'change', 
+                decixion._onSelectElChange, 
+                false
+            );
+        }
+
+        decixion._selectEl = null;
+    },
+
+    bindbutton: function (buttonEl) {
+        decixion.unbindbutton();
+
+        decixion._buttonEl = buttonEl;
+
+        decixion._buttonEl.addEventListener(
+            'click', 
+            decixion._onButtonElClick, 
+            false
+        );
+    },
+
+    unbindbutton: function () {
+        if (decixion._buttonEl) {
+            decixion._buttonEl.removeEventListener(
+                'click', 
+                decixion._onButtonElClick, 
+                false
+            );
+        }
+
+        decixion._buttonEl = null;
+    },
+
     init: function (game) {
         decixion._game = game;
 
         decixion._initPlayers(game);
         decixion._initState(game);
+
+        decixion.select();
     },
 
     get: function (name, player) {
@@ -91,6 +176,62 @@ var decixion = {
         decixion.set(name, nextValue, player);
 
         return nextValue;
+    },
+
+    select: function (optionIndex) {
+        var game = decixion._game;
+
+        if (!decixion._currentSection) {
+            decixion._currentSection = decixion._getObjectChain(
+                game.sections,
+                game.entrySection
+            );
+
+            return true;
+        }
+
+        var currentSection = decixion._currentSection;
+
+        if (!currentSection['options']) {
+            return false;
+        }
+
+        if (optionIndex < 0) {
+            optionIndex = 0;
+        } else {
+            if (optionIndex >= currentSection.options.length) {
+                optionIndex = currentSection.options.length - 1;
+            }
+        }
+
+        var option = currentSection.options[optionIndex];
+
+        if (!option['section']) {
+            return false;
+        }
+
+        decixion._currentSection = decixion._getObjectChain(
+            game.sections,
+            option.section
+        );
+
+        if (decixion._textEl) {
+            decixion._textEl.innerText = decixion.text();
+        }
+
+        if (decixion._selectEl) {
+            currentSection = decixion._currentSection;
+
+            if (currentSection['options']) {
+                decixion._updateSelectElOptions(
+                    currentSection.options
+                );
+            } else {
+                decixion._updateSelectElOptions([]);
+            }
+        }
+
+        return true;
     },
 
     _initPlayers: function (game) {
@@ -181,6 +322,46 @@ var decixion = {
                     object1[key] = value;
                 }
             }
+        }
+    },
+
+    _updateSelectElOptions: function (options) {
+        if (!decixion._selectEl) {
+            return null;
+        }
+
+        var total = decixion._selectEl.length;
+        var i, option;
+
+        for (i = total - 1; i >= 0; i--) {
+            decixion._selectEl.remove(i);
+        }
+
+        total = options.length;
+
+        for (i = 0; i < total; i++) {
+            option = document.createElement('option');
+            option.text = options[i].text;
+            option.value = i;
+            decixion._selectEl.appendChild(option);
+        }
+
+        return decixion._selectEl;
+    },
+
+    _onSelectElChange: function (e) {
+        if (decixion._selectEl) {
+            decixion.select(
+                decixion._selectEl.selectedIndex
+            );
+        }
+    },
+
+    _onButtonElClick: function (e) {
+        if (decixion._selectEl) {
+            decixion.select(
+                decixion._selectEl.selectedIndex
+            );
         }
     }
 };

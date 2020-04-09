@@ -11,6 +11,17 @@
     <title>Decixion Engine 0.3.1</title>
 </head>
 <body>
-    
+    <div id="textEl"></div>
+    <select id="selectEl"></select>
+    <button id="buttonEl">OK</button>
+    <script>
+        var textEl = document.getElementById('textEl');
+        var selectEl = document.getElementById('selectEl');
+        var buttonEl = document.getElementById('buttonEl');
+
+        decixion.bindtext(textEl);
+        decixion.bindselect(selectEl);
+        decixion.bindbutton(buttonEl);
+    </script>
 </body>
 </html>
