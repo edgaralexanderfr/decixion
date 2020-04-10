@@ -150,7 +150,7 @@ var decixion = {
 
         decixion._currentSection = decixion._getObjectChain(
             game.sections, 
-            decixion._retrieveSection(option)
+            decixion._evaluateGameValue(option.section)
         );
 
         if (decixion._textEl) {
@@ -170,6 +170,17 @@ var decixion = {
         }
 
         return true;
+    },
+
+    call: function (call, args) {
+        var params = args || {};
+
+        var func = decixion._getObjectChain(
+            decixion._game.functions, 
+            call
+        );
+
+        return func(decixion, params);
     },
 
     bindtext: function (textEl) {
@@ -349,10 +360,21 @@ var decixion = {
         return decixion._selectEl;
     },
 
-    _retrieveSection: function (option) {
-        return typeof option['section'] == 'function' 
-            ? option.section(decixion) 
-            : option.section;
+    _evaluateGameValue: function (value) {
+        if (typeof value == 'function') {
+            return value(decixion);
+        }
+
+        if (value['call']) {
+            var args 
+                = value['args'] 
+                ? value.args : 
+                {};
+
+            return decixion.call(value.call, args);
+        }
+
+        return value;
     },
 
     _onSelectElChange: function (e) {
