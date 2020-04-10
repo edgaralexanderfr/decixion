@@ -14,6 +14,15 @@ var decixion = {
     _selectEl: null,
     _buttonEl: null,
 
+    init: function (game) {
+        decixion._game = game;
+
+        decixion._initPlayers(game);
+        decixion._initState(game);
+
+        decixion.select();
+    },
+
     setRangeMin: function (rangeMin) {
         decixion._rangeMin = rangeMin;
     },
@@ -37,77 +46,6 @@ var decixion = {
         }
 
         return options;
-    },
-
-    bindtext: function (textEl) {
-        decixion._textEl = textEl;
-        decixion._textEl.innerText = decixion.text();
-    },
-
-    unbindtext: function () {
-        decixion._textEl = null;
-    },
-
-    bindselect: function (selectEl) {
-        decixion.unbindselect();
-
-        var currentSection = decixion._currentSection;
-        decixion._selectEl = selectEl;
-
-        if (currentSection && currentSection['options']) {
-            decixion._updateSelectElOptions(currentSection.options);
-        }
-
-        decixion._selectEl.addEventListener(
-            'change', 
-            decixion._onSelectElChange, 
-            false
-        );
-    },
-
-    unbindselect: function () {
-        if (decixion._selectEl) {
-            decixion._selectEl.removeEventListener(
-                'change', 
-                decixion._onSelectElChange, 
-                false
-            );
-        }
-
-        decixion._selectEl = null;
-    },
-
-    bindbutton: function (buttonEl) {
-        decixion.unbindbutton();
-
-        decixion._buttonEl = buttonEl;
-
-        decixion._buttonEl.addEventListener(
-            'click', 
-            decixion._onButtonElClick, 
-            false
-        );
-    },
-
-    unbindbutton: function () {
-        if (decixion._buttonEl) {
-            decixion._buttonEl.removeEventListener(
-                'click', 
-                decixion._onButtonElClick, 
-                false
-            );
-        }
-
-        decixion._buttonEl = null;
-    },
-
-    init: function (game) {
-        decixion._game = game;
-
-        decixion._initPlayers(game);
-        decixion._initState(game);
-
-        decixion.select();
     },
 
     get: function (name, player) {
@@ -211,8 +149,8 @@ var decixion = {
         }
 
         decixion._currentSection = decixion._getObjectChain(
-            game.sections,
-            option.section
+            game.sections, 
+            decixion._retrieveSection(option)
         );
 
         if (decixion._textEl) {
@@ -234,9 +172,71 @@ var decixion = {
         return true;
     },
 
+    bindtext: function (textEl) {
+        decixion._textEl = textEl;
+        decixion._textEl.innerText = decixion.text();
+    },
+
+    unbindtext: function () {
+        decixion._textEl = null;
+    },
+
+    bindselect: function (selectEl) {
+        decixion.unbindselect();
+
+        var currentSection = decixion._currentSection;
+        decixion._selectEl = selectEl;
+
+        if (currentSection && currentSection['options']) {
+            decixion._updateSelectElOptions(currentSection.options);
+        }
+
+        decixion._selectEl.addEventListener(
+            'change', 
+            decixion._onSelectElChange, 
+            false
+        );
+    },
+
+    unbindselect: function () {
+        if (decixion._selectEl) {
+            decixion._selectEl.removeEventListener(
+                'change', 
+                decixion._onSelectElChange, 
+                false
+            );
+        }
+
+        decixion._selectEl = null;
+    },
+
+    bindbutton: function (buttonEl) {
+        decixion.unbindbutton();
+
+        decixion._buttonEl = buttonEl;
+
+        decixion._buttonEl.addEventListener(
+            'click', 
+            decixion._onButtonElClick, 
+            false
+        );
+    },
+
+    unbindbutton: function () {
+        if (decixion._buttonEl) {
+            decixion._buttonEl.removeEventListener(
+                'click', 
+                decixion._onButtonElClick, 
+                false
+            );
+        }
+
+        decixion._buttonEl = null;
+    },
+
     _initPlayers: function (game) {
         if (typeof game['players'] == 'object') {
-            decixion._setValuesRecursive(
+            decixion._setRecursiveValues(
                 decixion._players, 
                 game.players
             );
@@ -245,7 +245,7 @@ var decixion = {
 
     _initState: function (game) {
         if (typeof game['state'] == 'object') {
-            decixion._setValuesRecursive(
+            decixion._setRecursiveValues(
                 decixion._state, 
                 game.state
             );
@@ -289,7 +289,7 @@ var decixion = {
         return value;
     },
 
-    _setValuesRecursive: function (object1, object2) {
+    _setRecursiveValues: function (object1, object2) {
         var isArray = Array.isArray(object2);
         var key, value, isArrayValue, isObjectValue, object;
 
@@ -305,7 +305,7 @@ var decixion = {
                     object = {};
                 }
 
-                decixion._setValuesRecursive(
+                decixion._setRecursiveValues(
                     object,
                     value
                 );
@@ -347,6 +347,12 @@ var decixion = {
         }
 
         return decixion._selectEl;
+    },
+
+    _retrieveSection: function (option) {
+        return typeof option['section'] == 'function' 
+            ? option.section(decixion) 
+            : option.section;
     },
 
     _onSelectElChange: function (e) {
