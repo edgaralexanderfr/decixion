@@ -10,7 +10,10 @@ var decixion = {
     _rangeMin: 0,
     _rangeMax: 100,
     _currentSection: null,
+    _countdown: 0,
+    _countdownInterval: null,
     _textEl: null,
+    _countdownEl: null,
     _selectEl: null,
     _buttonEl: null,
 
@@ -33,6 +36,10 @@ var decixion = {
 
     text: function () {
         return decixion._currentSection.text;
+    },
+
+    countdown: function () {
+        return decixion._countdown;
     },
 
     options: function () {
@@ -119,6 +126,8 @@ var decixion = {
     select: function (optionIndex) {
         var game = decixion._game;
 
+        decixion._clearCountdownInterval();
+
         if (!decixion._currentSection) {
             decixion._currentSection = decixion._getObjectChain(
                 game.sections,
@@ -153,21 +162,42 @@ var decixion = {
             decixion._evaluateGameValue(option.section)
         );
 
-        if (decixion._textEl) {
-            decixion._textEl.innerText = decixion.text();
-        }
+        currentSection = decixion._currentSection;
 
-        if (decixion._selectEl) {
-            currentSection = decixion._currentSection;
+        if (currentSection['countdown']) {
+            var timeOutSection = currentSection.countdown.section;
+            decixion._countdown = currentSection.countdown.time;
 
-            if (currentSection['options']) {
-                decixion._updateSelectElOptions(
-                    currentSection.options
-                );
-            } else {
-                decixion._updateSelectElOptions([]);
+            if (decixion._countdownEl) {
+                decixion._countdownEl.innerText = decixion._countdown;
             }
+
+            decixion._countdownInterval = setInterval(function () {
+                if (decixion._countdown == 0) {
+                    clearInterval(decixion._countdownInterval);
+                    decixion._countdownInterval = null;
+
+                    decixion._currentSection = decixion._getObjectChain(
+                        game.sections, 
+                        decixion._evaluateGameValue(timeOutSection)
+                    );
+
+                    if (decixion._countdownEl) {
+                        decixion._countdownEl.innerText = '';
+                    }
+
+                    decixion._updateEls();
+                } else {
+                    decixion._countdown--;
+
+                    if (decixion._countdownEl) {
+                        decixion._countdownEl.innerText = decixion._countdown;
+                    }
+                }
+            }, 1000);
         }
+
+        decixion._updateEls();
 
         return true;
     },
@@ -190,6 +220,20 @@ var decixion = {
 
     unbindtext: function () {
         decixion._textEl = null;
+    },
+
+    bindcountdown: function (countdownEl) {
+        decixion._countdownEl = countdownEl;
+
+        if (decixion._countdown > 0) {
+            decixion._countdownEl.innerText = decixion.countdown();
+        } else {
+            decixion._countdownEl.innerText = '';
+        }
+    },
+
+    unbindcountdown: function () {
+        decixion._countdownEl = null;
     },
 
     bindselect: function (selectEl) {
@@ -336,6 +380,24 @@ var decixion = {
         }
     },
 
+    _updateEls: function () {
+        if (decixion._textEl) {
+            decixion._textEl.innerText = decixion.text();
+        }
+
+        var currentSection = decixion._currentSection;
+
+        if (decixion._selectEl) {
+            if (currentSection['options']) {
+                decixion._updateSelectElOptions(
+                    currentSection.options
+                );
+            } else {
+                decixion._updateSelectElOptions([]);
+            }
+        }
+    },
+
     _updateSelectElOptions: function (options) {
         if (!decixion._selectEl) {
             return null;
@@ -375,6 +437,19 @@ var decixion = {
         }
 
         return value;
+    },
+
+    _clearCountdownInterval: function () {
+        if (decixion._countdownInterval) {
+            clearInterval(decixion._countdownInterval);
+
+            decixion._countdownInterval = null;
+            decixion._countdown = 0;
+
+            if (decixion._countdownEl) {
+                decixion._countdownEl.innerText = '';
+            }
+        }
     },
 
     _onSelectElChange: function (e) {
