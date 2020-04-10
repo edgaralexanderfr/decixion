@@ -4,6 +4,10 @@ var game = {
     },
     state: {},
 
+    functions: {
+        
+    },
+
     sections: {
 
     }
