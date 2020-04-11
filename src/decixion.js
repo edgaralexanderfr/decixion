@@ -157,47 +157,7 @@ var decixion = {
             return false;
         }
 
-        decixion._currentSection = decixion._getObjectChain(
-            game.sections, 
-            decixion._evaluateGameValue(option.section)
-        );
-
-        currentSection = decixion._currentSection;
-
-        if (currentSection['countdown']) {
-            var timeOutSection = currentSection.countdown.section;
-            decixion._countdown = currentSection.countdown.time;
-
-            if (decixion._countdownEl) {
-                decixion._countdownEl.innerText = decixion._countdown;
-            }
-
-            decixion._countdownInterval = setInterval(function () {
-                if (decixion._countdown == 0) {
-                    clearInterval(decixion._countdownInterval);
-                    decixion._countdownInterval = null;
-
-                    decixion._currentSection = decixion._getObjectChain(
-                        game.sections, 
-                        decixion._evaluateGameValue(timeOutSection)
-                    );
-
-                    if (decixion._countdownEl) {
-                        decixion._countdownEl.innerText = '';
-                    }
-
-                    decixion._updateEls();
-                } else {
-                    decixion._countdown--;
-
-                    if (decixion._countdownEl) {
-                        decixion._countdownEl.innerText = decixion._countdown;
-                    }
-                }
-            }, 1000);
-        }
-
-        decixion._updateEls();
+        decixion._goToSection(option.section);
 
         return true;
     },
@@ -378,6 +338,50 @@ var decixion = {
                 }
             }
         }
+    },
+
+    _goToSection: function (section) {
+        decixion._currentSection = decixion._getObjectChain(
+            game.sections, 
+            decixion._evaluateGameValue(section)
+        );
+
+        var currentSection = decixion._currentSection;
+
+        if (currentSection['countdown']) {
+            var timeOutSection = currentSection.countdown.section;
+            decixion._countdown = currentSection.countdown.time;
+
+            if (decixion._countdownEl) {
+                decixion._countdownEl.innerText = decixion._countdown;
+            }
+
+            decixion._countdownInterval = setInterval(function () {
+                if (decixion._countdown == 0) {
+                    clearInterval(decixion._countdownInterval);
+                    decixion._countdownInterval = null;
+
+                    if (decixion._countdownEl) {
+                        decixion._countdownEl.innerText = '';
+                    }
+
+                    decixion._goToSection(timeOutSection);
+                    decixion._updateEls();
+                } else {
+                    decixion._countdown--;
+
+                    if (decixion._countdownEl) {
+                        decixion._countdownEl.innerText = decixion._countdown;
+                    }
+                }
+            }, 1000);
+        }
+
+        if (currentSection['enter']) {
+            decixion._evaluateGameValue(currentSection['enter']);
+        }
+
+        decixion._updateEls();
     },
 
     _updateEls: function () {
