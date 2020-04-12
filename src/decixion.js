@@ -173,6 +173,23 @@ var decixion = {
         return func(decixion, params);
     },
 
+    each: function (iterable, callback) {
+        if (Array.isArray(iterable)) {
+            var length = iterable.length;
+            var i;
+
+            for (i = 0; i < length; i++) {
+                callback(i, iterable[i]);
+            }
+        } else {
+            var key;
+
+            for (key in iterable) {
+                callback(key, iterable[key]);
+            }
+        }
+    },
+
     bindtext: function (textEl) {
         decixion._textEl = textEl;
         decixion._textEl.innerText = decixion.text();
@@ -377,6 +394,45 @@ var decixion = {
             }, 1000);
         }
 
+        if (currentSection['set']) {
+            decixion._evaluateStateValue(
+                currentSection.set, 
+                function (value) {
+                    decixion.set(
+                        value.name, 
+                        decixion._evaluateGameValue(value.value), 
+                        value['player']
+                    );
+                }
+            );
+        }
+
+        if (currentSection['increase']) {
+            decixion._evaluateStateValue(
+                currentSection.increase, 
+                function (value) {
+                    decixion.increase(
+                        value.name, 
+                        decixion._evaluateGameValue(value.value), 
+                        value['player']
+                    );
+                }
+            );
+        }
+
+        if (currentSection['decrease']) {
+            decixion._evaluateStateValue(
+                currentSection.decrease, 
+                function (value) {
+                    decixion.decrease(
+                        value.name, 
+                        decixion._evaluateGameValue(value.value), 
+                        value['player']
+                    );
+                }
+            );
+        }
+
         if (currentSection['enter']) {
             decixion._evaluateGameValue(currentSection['enter']);
         }
@@ -424,6 +480,16 @@ var decixion = {
         }
 
         return decixion._selectEl;
+    },
+
+    _evaluateStateValue: function (value, callback) {
+        if (!Array.isArray(value)) {
+            value = [value];
+        }
+
+        decixion.each(value, function (i, value) {
+            callback(value);
+        });
     },
 
     _evaluateGameValue: function (value) {
