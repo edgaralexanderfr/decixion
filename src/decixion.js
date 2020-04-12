@@ -22,6 +22,7 @@ var decixion = {
 
         decixion._initPlayers(game);
         decixion._initState(game);
+        decixion._initGame(game);
 
         decixion.select();
     },
@@ -281,6 +282,12 @@ var decixion = {
                 decixion._state, 
                 game.state
             );
+        }
+    },
+
+    _initGame: function (game) {
+        if (typeof game['init'] == 'function') {
+            game.init(decixion);
         }
     },
 
