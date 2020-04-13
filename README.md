@@ -1,5 +1,7 @@
 # Decixion Engine
 
+[![NPM](https://nodei.co/npm/decixion.png)](https://nodei.co/npm/decixion/)
+
 [![View last release](https://img.shields.io/badge/version-0.3.1-informational.svg)](https://github.com/edgaralexanderfr/decixion/releases/latest)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Donate](https://img.shields.io/badge/Donate-ff69b4.svg)](http://www.edgaralexanderfr.com.ve/donate)
