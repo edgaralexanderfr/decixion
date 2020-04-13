@@ -4,6 +4,14 @@ var game = {
     },
     state: {},
 
+    init: function (decixion) {
+
+    },
+
+    functions: {
+
+    },
+
     sections: {
 
     }

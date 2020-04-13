@@ -4,13 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="game.js"></script>
-    <script type="text/javascript" src="decixion.js"></script>
+    <script type="text/javascript" src="decixion.min.js"></script>
     <script type="text/javascript">
         decixion.init(game);
     </script>
     <title>Decixion Engine 0.3.1</title>
 </head>
 <body>
-    
+    <div id="textEl"></div>
+    <select id="selectEl"></select>
+    <button id="buttonEl">OK</button>
+    <span id="countdownEl"></span>
+    <script>
+        var textEl = document.getElementById('textEl');
+        var countdownEl = document.getElementById('countdownEl');
+        var selectEl = document.getElementById('selectEl');
+        var buttonEl = document.getElementById('buttonEl');
+
+        decixion.bindtext(textEl);
+        decixion.bindcountdown(countdownEl);
+        decixion.bindselect(selectEl);
+        decixion.bindbutton(buttonEl);
+    </script>
 </body>
 </html>

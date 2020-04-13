@@ -1,6 +1,8 @@
+const fs = require('fs');
 const { series, src, dest } = require('gulp');
 const uglify = require('gulp-uglify');
 const header = require('gulp-header');
+const replace = require('gulp-replace');
 
 const HEADER =
     '/**\n' +
@@ -16,6 +18,7 @@ function copyFiles(cb) {
         .pipe(dest('dist'));
 
     src('src/index.html')
+        .pipe(replace('decixion.js', 'decixion.min.js'))
         .pipe(dest('dist'));
 
     cb();
@@ -33,5 +36,15 @@ function prependHeader() {
         .pipe(dest('dist'));
 }
 
-exports.build = series(copyFiles, uglifyEngine, prependHeader);
-exports.default = series(copyFiles, uglifyEngine, prependHeader);
+function renameMinified(cb) {
+    fs.rename('dist/decixion.js', 'dist/decixion.min.js', function (err) {
+        if (err) {
+            throw err;
+        }
+
+        cb();
+    });
+}
+
+exports.build = series(copyFiles, uglifyEngine, prependHeader, renameMinified);
+exports.default = series(copyFiles, uglifyEngine, prependHeader, renameMinified);

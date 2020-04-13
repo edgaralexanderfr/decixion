@@ -46,11 +46,11 @@ if (createOptionIndex < 0) {
             console.error('ERROR: directory already exists with supplied name.');
         } else {
             var copyIndexPath = path.join(copyPath, 'index.html');
-            var copyDecixionPath = path.join(copyPath, 'decixion.js');
+            var copyDecixionPath = path.join(copyPath, 'decixion.min.js');
             var copyGamePath = path.join(copyPath, 'game.js');
 
             var destIndexPath = path.join(destPath, 'index.html');
-            var destDecixionPath = path.join(destPath, 'decixion.js');
+            var destDecixionPath = path.join(destPath, 'decixion.min.js');
             var destGamePath = path.join(destPath, 'game.js');
 
             fs.mkdirSync(destPath);
