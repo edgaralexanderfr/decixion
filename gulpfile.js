@@ -1,17 +1,18 @@
 const fs = require('fs');
+const os = require('os');
 const { series, src, dest } = require('gulp');
 const uglify = require('gulp-uglify');
 const header = require('gulp-header');
 const replace = require('gulp-replace');
 
 const HEADER =
-    '/**\n' +
-    ' * Decixion Engine\n' +
-    ' *\n' +
-    ' * Version: 0.4.0\n' +
-    ' * MIT License\n' +
-    ' * Copyright (c) 2020 Edgar Alexander Franco\n' +
-    ' */\n';
+    '/**' + os.EOL +
+    ' * Decixion Engine' + os.EOL +
+    ' *' + os.EOL +
+    ' * Version: 0.4.0' + os.EOL +
+    ' * MIT License' + os.EOL +
+    ' * Copyright (c) 2020 Edgar Alexander Franco' + os.EOL +
+    ' */' + os.EOL;
 
 function copyFiles(cb) {
     src('src/game.js')

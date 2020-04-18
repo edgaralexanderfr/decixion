@@ -127,13 +127,8 @@ var decixion = {
     select: function (optionIndex) {
         var game = decixion._game;
 
-        decixion._clearCountdownInterval();
-
         if (!decixion._currentSection) {
-            decixion._currentSection = decixion._getObjectChain(
-                game.sections,
-                game.entrySection
-            );
+            decixion._goToSection(game.entrySection);
 
             return true;
         }
@@ -158,6 +153,7 @@ var decixion = {
             return false;
         }
 
+        decixion._clearCountdownInterval();
         decixion._goToSection(option.section);
 
         return true;
@@ -365,6 +361,8 @@ var decixion = {
     },
 
     _goToSection: function (section) {
+        var game = decixion._game;
+
         decixion._currentSection = decixion._getObjectChain(
             game.sections, 
             decixion._evaluateGameValue(section)
