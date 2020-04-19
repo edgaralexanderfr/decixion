@@ -52,12 +52,14 @@ if (createOptionIndex < 0) {
             var destIndexPath = path.join(destPath, 'index.html');
             var destDecixionPath = path.join(destPath, 'decixion.min.js');
             var destGamePath = path.join(destPath, 'game.js');
+            var destSoundsPath = path.join(destPath, 'sounds');
 
             fs.mkdirSync(destPath);
 
             fs.copyFileSync(copyIndexPath, destIndexPath);
             fs.copyFileSync(copyDecixionPath, destDecixionPath);
             fs.copyFileSync(copyGamePath, destGamePath);
+            fs.mkdirSync(destSoundsPath);
 
             console.log('Project created successfully.');
         }
