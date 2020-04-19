@@ -13,7 +13,6 @@ var decixion = {
     _countdown: 0,
     _countdownInterval: null,
     _sounds: {},
-    _loadedSounds: {},
     _textEl: null,
     _countdownEl: null,
     _selectEl: null,
@@ -346,7 +345,9 @@ var decixion = {
                         }
 
                         if (finalUri) {
-                            decixion._loadedSounds[name] = false;
+                            decixion._sounds[name] = {
+                                loaded: false
+                            };
 
                             var audio = new Audio(finalUri);
                             audio.setAttribute('data-dcx-sound-name', name);
@@ -354,7 +355,7 @@ var decixion = {
                             audio.oncanplaythrough = decixion._onSoundCanPlay;
                             audio.load();
 
-                            decixion._sounds[name] = audio;
+                            decixion._sounds[name].audio = audio;
                         }
                     }
                 });
@@ -518,20 +519,32 @@ var decixion = {
         }
 
         if (currentSection['sound']) {
-            var sound = decixion._evaluateGameValue(currentSection.sound);
+            var playedSounds = {};
+            var sounds = currentSection.sound;
 
-            if (!decixion.IS_MODULE) {
-                if (sound
-                    && typeof decixion._sounds[sound] != 'undefined'
-                    && decixion._loadedSounds[sound]
-                ) {
-                    if (!decixion._sounds[sound].paused) {
-                        decixion._sounds[sound].pause();
-                    }
-    
-                    decixion._sounds[sound].play();
-                }
+            if (!Array.isArray(sounds)) {
+                sounds = [sounds];
             }
+
+            decixion.each(sounds, function (i, soundName) {
+                var sound = decixion._evaluateGameValue(soundName);
+
+                if (!decixion.IS_MODULE) {
+                    if (sound
+                        && typeof playedSounds[sound] == 'undefined'
+                        && typeof decixion._sounds[sound] != 'undefined'
+                        && decixion._sounds[sound].loaded
+                    ) {
+                        if (!decixion._sounds[sound].audio.paused) {
+                            decixion._sounds[sound].audio.pause();
+                            decixion._sounds[sound].audio.currentTime = 0;
+                        }
+
+                        decixion._sounds[sound].audio.play();
+                        playedSounds[sound] = true;
+                    }
+                }
+            });
         }
 
         decixion._updateEls();
@@ -621,7 +634,7 @@ var decixion = {
 
     _onSoundCanPlay: function (e) {
         var name = this.getAttribute('data-dcx-sound-name');
-        decixion._loadedSounds[name] = true;
+        decixion._sounds[name].loaded = true;
     },
 
     _onSelectElChange: function (e) {
