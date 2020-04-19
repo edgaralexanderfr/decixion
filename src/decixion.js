@@ -23,8 +23,9 @@ var decixion = {
 
         decixion._initPlayers(game);
         decixion._initState(game);
-        decixion._initGame(game);
+        decixion._initKeys(game);
         decixion._initSounds(game);
+        decixion._initGame(game);
 
         decixion.select();
     },
@@ -197,6 +198,19 @@ var decixion = {
         }
     },
 
+    bindkeys: function () {
+        if (!decixion.IS_MODULE) {
+            decixion.unbindkeys();
+            window.addEventListener('keyup', decixion._onKeyUp, false);
+        }
+    },
+
+    unbindkeys: function () {
+        if (!decixion.IS_MODULE) {
+            window.removeEventListener('keyup', decixion._onKeyUp, false);
+        }
+    },
+
     bindtext: function (textEl) {
         decixion._textEl = textEl;
         decixion._textEl.innerText = decixion.text();
@@ -291,9 +305,9 @@ var decixion = {
         }
     },
 
-    _initGame: function (game) {
-        if (typeof game['init'] == 'function') {
-            game.init(decixion);
+    _initKeys: function (game) {
+        if (game['bindKeys'] !== false) {
+            decixion.bindkeys();
         }
     },
 
@@ -360,6 +374,12 @@ var decixion = {
                     }
                 });
             }
+        }
+    },
+
+    _initGame: function (game) {
+        if (typeof game['init'] == 'function') {
+            game.init(decixion);
         }
     },
 
@@ -632,6 +652,23 @@ var decixion = {
         }
     },
 
+    _onKeyUp: function (e) {
+        var keys = [
+            '0', '1', '2',
+            '3', '4', '5',
+            '6', '7', '8',
+            '9'
+        ];
+
+        if (typeof keys[e.key] != 'undefined') {
+            decixion.select(e.key - 1);
+        } else {
+            if (e.key == 'Enter') {
+                decixion.select(0);
+            }
+        }
+    },
+
     _onSoundCanPlay: function (e) {
         var name = this.getAttribute('data-dcx-sound-name');
         decixion._sounds[name].loaded = true;
@@ -654,6 +691,7 @@ var decixion = {
     }
 };
 
+var dcx = decixion;
 decixion.IS_MODULE = typeof module != 'undefined';
 
 if (decixion.IS_MODULE) {

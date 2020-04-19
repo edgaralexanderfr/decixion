@@ -23,6 +23,10 @@ decixion.each(process.argv, function (i, arg) {
         debugMode = true;
         break;
     }
+
+    if (arg == '-cd' || arg == '-dc') {
+        clear = debugMode = true;
+    }
 });
 
 function play (option) {
