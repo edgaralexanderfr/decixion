@@ -9,7 +9,7 @@ const HEADER =
     '/**' + os.EOL +
     ' * Decixion Engine' + os.EOL +
     ' *' + os.EOL +
-    ' * Version: 0.4.0' + os.EOL +
+    ' * Version: 0.5.0' + os.EOL +
     ' * MIT License' + os.EOL +
     ' * Copyright (c) 2020 Edgar Alexander Franco' + os.EOL +
     ' */' + os.EOL;

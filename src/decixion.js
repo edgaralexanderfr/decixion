@@ -2,7 +2,7 @@
  * @class
  */
 var decixion = {
-    VERSION: '0.4.0',
+    VERSION: '0.5.0',
     IS_MODULE: false,
 
     _game: null,
