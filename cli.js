@@ -45,13 +45,25 @@ if (createOptionIndex < 0) {
         if (fs.existsSync(destPath)) {
             console.error('ERROR: directory already exists with supplied name.');
         } else {
+            var cliVersionName;
+
+            if (projectFolder == 'game'
+                || projectFolder == 'decixion.min'
+            ) {
+                cliVersionName = 'cli-version.js';
+            } else {
+                cliVersionName = projectFolder + '.js';
+            }
+
             var copyIndexPath = path.join(copyPath, 'index.html');
             var copyDecixionPath = path.join(copyPath, 'decixion.min.js');
             var copyGamePath = path.join(copyPath, 'game.js');
+            var copyCliVersionPath = path.join(copyPath, 'cli-version.js');
 
             var destIndexPath = path.join(destPath, 'index.html');
             var destDecixionPath = path.join(destPath, 'decixion.min.js');
             var destGamePath = path.join(destPath, 'game.js');
+            var destCliVersionPath = path.join(destPath, cliVersionName);
             var destSoundsPath = path.join(destPath, 'sounds');
 
             fs.mkdirSync(destPath);
@@ -59,6 +71,7 @@ if (createOptionIndex < 0) {
             fs.copyFileSync(copyIndexPath, destIndexPath);
             fs.copyFileSync(copyDecixionPath, destDecixionPath);
             fs.copyFileSync(copyGamePath, destGamePath);
+            fs.copyFileSync(copyCliVersionPath, destCliVersionPath);
             fs.mkdirSync(destSoundsPath);
 
             console.log('Project created successfully.');

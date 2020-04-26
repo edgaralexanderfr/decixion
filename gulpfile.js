@@ -22,6 +22,10 @@ function copyFiles(cb) {
         .pipe(replace('decixion.js', 'decixion.min.js'))
         .pipe(dest('dist'));
 
+    src('src/cli-version.js')
+        .pipe(replace('./decixion', './decixion.min'))
+        .pipe(dest('dist'));
+
     cb();
 }
 

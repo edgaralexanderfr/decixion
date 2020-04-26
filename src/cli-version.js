@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 const os = require('os');
-const decixion = require('../src/decixion');
+const decixion = require('./decixion');
 const dcx = decixion;
-const game = require('../src/game');
+const game = require('./game');
 const readline = require('readline').createInterface({
     input: process.stdin,
     output: process.stdout
