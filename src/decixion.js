@@ -423,18 +423,40 @@ var decixion = {
 
     _setRecursiveValues: function (object1, object2) {
         var isArray = Array.isArray(object2);
-        var key, value, isArrayValue, isObjectValue, object;
+        var key,
+            value,
+            isFunctionValue,
+            isArrayValue,
+            isObjectValue,
+            existentValueType,
+            object;
 
         for (key in object2) {
             value = object2[key];
+            isFunctionValue = typeof value == 'function';
             isArrayValue = Array.isArray(value);
             isObjectValue = typeof value == 'object';
+            existentValueType = typeof object1[key];
 
-            if (isArrayValue || isObjectValue) {
+            if (!isFunctionValue 
+                && (isArrayValue || isObjectValue)
+            ) {
                 if (isArrayValue) {
                     object = [];
                 } else {
                     object = {};
+                }
+
+                if (existentValueType != 'undefined'
+                    && (
+                        (isArrayValue && Array.isArray(object1[key]))
+                        || (!isArrayValue && !Array.isArray(object1[key]))
+                    )
+                ) {
+                    decixion._setRecursiveValues(
+                        object,
+                        object1[key]
+                    );
                 }
 
                 decixion._setRecursiveValues(
@@ -443,13 +465,21 @@ var decixion = {
                 );
 
                 if (isArray) {
-                    object1.push(object);
+                    if (existentValueType == 'undefined') {
+                        object1.push(object);
+                    } else {
+                        object1[parseInt(key)] = object;
+                    }
                 } else {
                     object1[key] = object;
                 }
             } else {
                 if (isArray) {
-                    object1.push(value);
+                    if (existentValueType == 'undefined') {
+                        object1.push(value);
+                    } else {
+                        object1[parseInt(key)] = value;
+                    }
                 } else {
                     object1[key] = value;
                 }
