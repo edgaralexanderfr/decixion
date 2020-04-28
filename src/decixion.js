@@ -22,6 +22,7 @@ var decixion = {
     init: function (game) {
         decixion._game = game;
 
+        decixion._initModules(game);
         decixion._initPlayers(game);
         decixion._initState(game);
         decixion._initKeys(game);
@@ -58,6 +59,29 @@ var decixion = {
         }
 
         return options;
+    },
+
+    include: function (gameModule) {
+        var game = decixion._game;
+        var objectsToMerge = [
+            'players',
+            'state',
+            'functions',
+            'sections'
+        ];
+
+        decixion.each(objectsToMerge, function (i, objectToMerge) {
+            if (typeof gameModule[objectToMerge] == 'object') {
+                if (typeof game[objectToMerge] != 'object') {
+                    game[objectToMerge] = {};
+                }
+
+                decixion._setRecursiveValues(
+                    game[objectToMerge],
+                    gameModule[objectToMerge]
+                );
+            }
+        });
     },
 
     get: function (name, player) {
@@ -286,6 +310,12 @@ var decixion = {
         }
 
         decixion._buttonEl = null;
+    },
+
+    _initModules: function (game) {
+        if (typeof game['require'] == 'function') {
+            game.require(decixion);
+        }
     },
 
     _initPlayers: function (game) {
