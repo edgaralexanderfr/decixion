@@ -313,8 +313,29 @@ var decixion = {
     },
 
     _initModules: function (game) {
-        if (typeof game['require'] == 'function') {
-            game.require(decixion);
+        if (Array.isArray(game['require'])) {
+            var includes = game.require;
+            var i, include;
+
+            for (i = 0; i < includes.length; i++) {
+                include = includes[i];
+
+                if (decixion.IS_MODULE) {
+                    if (typeof include.module == 'function') {
+                        decixion.include(require(include.module()));
+                    } else 
+                    if (typeof include.module != 'undefined') {
+                        decixion.include(require(include.module));
+                    }
+                } else {
+                    if (typeof include.object == 'function') {
+                        decixion.include(include.object());
+                    } else 
+                    if (typeof include.object != 'undefined') {
+                        decixion.include(include.object);
+                    }
+                }
+            }
         }
     },
 
